@@ -29,14 +29,6 @@ export const createBirdSystem = (
   return defineSystem((world: World, gameState: GameState) => {
     const entities = birdQuery(world);
 
-    if (gameState.reset) {
-      for (let i = 0; i < entities.length; i++) {
-        const id = entities[i];
-        removeEntity(world, id);
-      }
-      return world;
-    }
-
     for (let i = 0; i < entities.length; i++) {
       const id = entities[i];
       if (!Player.dead[id]) {
@@ -44,12 +36,20 @@ export const createBirdSystem = (
           Velocity.y[id] = 4;
         }
       } else {
-        //gameState.resetGame();
+        gameState.resetGame();
       }
       if (Position.y[id] < 450) {
         Velocity.y[id] -= 0.2;
         Position.y[id] -= Velocity.y[id];
       }
+    }
+
+    if (gameState.reset) {
+      for (let i = 0; i < entities.length; i++) {
+        const id = entities[i];
+        removeEntity(world, id);
+      }
+      return world;
     }
   });
 };

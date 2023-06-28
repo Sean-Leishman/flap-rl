@@ -133,13 +133,7 @@ class Game extends Phaser.Scene {
     }
   }
 
-  create() {
-    const { width, height } = this.scale;
-
-    console.log(width, height);
-    this.world = createWorld();
-    this.world.dead = false;
-
+  reinitialise() {
     const bird = addEntity(this.world);
     addComponent(this.world, Position, bird);
     addComponent(this.world, Rotation, bird);
@@ -171,22 +165,36 @@ class Game extends Phaser.Scene {
         Player.dead[id] = true;
       }
     );
+  }
 
+  create() {
+    const { width, height } = this.scale;
+
+    console.log(width, height);
+    this.world = createWorld();
+    this.world.dead = false;
+
+    this.reinitialise();
+
+    this.birdSystem = createBirdSystem(this.playerGroup, this.kb);
     this.staticSpriteSystem = createStaticSpriteSystem(
       this.boundingGroup,
       TextureKeys
     );
     this.spriteSystem = createSpriteSystem(this.playerGroup, TextureKeys);
     this.pipeSystem = createPipeSystem(this, generatePipes);
-    this.birdSystem = createBirdSystem(this.playerGroup, this.kb);
   }
 
   update() {
     if (!this.world) return;
     this.spriteSystem?.(this.world);
-    this.pipeSystem?.(this.world, this.gameState);
     this.birdSystem?.(this.world, this.gameState);
+    this.pipeSystem?.(this.world, this.gameState);
     this.staticSpriteSystem?.(this.world);
+    if (this.gameState.reset) {
+      this.reinitialise();
+      this.gameState?.resetGame(false);
+    }
   }
 }
 

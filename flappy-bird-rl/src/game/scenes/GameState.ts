@@ -5,8 +5,8 @@ class GameState {
     this.reset = false;
   }
 
-  resetGame() {
-    this.reset = true;
+  resetGame(val: boolean = true) {
+    this.reset = val;
   }
 }
 
