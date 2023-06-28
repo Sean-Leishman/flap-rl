@@ -12,12 +12,12 @@ import {
 import { defineSystem } from "bitecs";
 import { removeEntity } from "bitecs";
 
-export const createSpriteSystem = (
+export const createStaticSpriteSystem = (
   group: Phaser.Physics.Arcade.Group,
   textures: string[]
 ) => {
   const spriteId = new Map<number, GameObjects.Sprite>();
-  const spriteQuery = defineQuery([Sprite, Player, Position, Rotation]);
+  const spriteQuery = defineQuery([Sprite, Static, Position]);
   const spriteQueryEnter = enterQuery(spriteQuery);
   const spriteQueryExit = exitQuery(spriteQuery);
 
@@ -31,10 +31,6 @@ export const createSpriteSystem = (
       const sprite = group.get(Position.x[id], Position.y[id], textId);
       sprite.scale = 1.5;
       spriteId.set(id, sprite);
-
-      // Alive
-      sprite.setData("id", id);
-      Player.dead[id] = false;
     }
     const entities = spriteQuery(world);
     for (let i = 0; i < entities.length; i++) {

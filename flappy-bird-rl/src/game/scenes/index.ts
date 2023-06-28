@@ -1,2 +1,2 @@
-export * from "./Game";
+export { Game } from "./Game";
 export * from "./bootstrap";
