@@ -19,6 +19,7 @@ import {
   RecentPipe,
   LastPipe,
   Static,
+  Vision,
 } from "../constants";
 import {
   createSpriteSystem,
@@ -38,6 +39,7 @@ import bg from "../../assets/bg.png";
 
 import "./GameState";
 import { GameState } from "./GameState";
+import Population from "../neat/Population";
 
 enum Textures {
   BirdUp = 0,
@@ -118,6 +120,9 @@ class Game extends Phaser.Scene {
 
   private gameState?: GameState;
 
+  private population?: Population;
+  private populationSize = 5;
+
   constructor() {
     super("game");
   }
@@ -125,6 +130,7 @@ class Game extends Phaser.Scene {
   init() {
     this.kb = this.input.keyboard?.createCursorKeys()!;
     this.gameState = new GameState();
+    this.population = new Population(this.populationSize);
   }
 
   preload() {
@@ -133,7 +139,7 @@ class Game extends Phaser.Scene {
     }
   }
 
-  reinitialise() {
+  addBird() {
     const bird = addEntity(this.world);
     addComponent(this.world, Position, bird);
     addComponent(this.world, Rotation, bird);
@@ -143,7 +149,15 @@ class Game extends Phaser.Scene {
     Sprite.texture[bird] = Textures.BirdUp;
     addComponent(this.world, Sprite, bird);
     addComponent(this.world, Player, bird);
+    addComponent(this.world, Vision, bird);
+    return bird;
+  }
 
+  reinitialise() {
+    for (let i = 0; i < this.populationSize; i++) {
+      const bird = this.addBird();
+      this.population?.addPlayer(bird);
+    }
     const base = addEntity(this.world);
     addComponent(this.world, Position, base);
     addComponent(this.world, Sprite, base);
@@ -151,6 +165,14 @@ class Game extends Phaser.Scene {
     Position.x[base] = 100;
     Position.y[base] = 550;
     Sprite.texture[base] = Textures.Ground;
+
+    const top = addEntity(this.world);
+    addComponent(this.world, Position, top);
+    addComponent(this.world, Sprite, top);
+    addComponent(this.world, Static, top);
+    Position.x[top] = 100;
+    Position.y[top] = -100;
+    Sprite.texture[top] = Textures.Ground;
 
     const pipes = addPipes(this.world);
 
@@ -188,7 +210,7 @@ class Game extends Phaser.Scene {
   update() {
     if (!this.world) return;
     this.spriteSystem?.(this.world);
-    this.birdSystem?.(this.world, this.gameState);
+    this.birdSystem?.(this.world, this.gameState, this.population);
     this.pipeSystem?.(this.world, this.gameState);
     this.staticSpriteSystem?.(this.world);
     if (this.gameState.reset) {
