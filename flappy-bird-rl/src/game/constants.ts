@@ -7,8 +7,12 @@ export const Velocity = defineComponent(Vector2);
 export const Sprite = defineComponent({
   texture: Types.ui8,
 });
-export const Player = defineComponent({ dead: Types.ui8, input: Types.ui8 });
-export const Pipe = defineComponent();
+export const Player = defineComponent({
+  dead: Types.ui8,
+  alive: Types.ui8,
+  input: Types.ui8,
+});
+export const Pipe = defineComponent({ type: Types.ui8 });
 export const RecentPipe = defineComponent();
 export const LastPipe = defineComponent();
 export const Static = defineComponent();
@@ -26,4 +30,6 @@ export const Vision = defineComponent({
   yVel: Types.f32,
   distanceToClosestPipe: Types.f32,
   heightBelowTopPipe: Types.f32,
+  lastPassedPipe: Types.f32,
+  hasPassed: Types.ui8,
 });

@@ -50,7 +50,7 @@ export const createSpriteSystem = (
       const id = exitEntities[i];
       const sprite = spriteId.get(id);
       if (!sprite) continue;
-      sprite.destroy();
+      group.killAndHide(sprite);
       spriteId.delete(id);
       removeEntity(world, id);
     }

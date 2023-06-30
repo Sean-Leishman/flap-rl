@@ -26,6 +26,7 @@ import {
   createPipeSystem,
   createBirdSystem,
   createStaticSpriteSystem,
+  createDrawingSystem,
 } from "../systems";
 import { System } from "bitecs";
 
@@ -56,10 +57,9 @@ const YCORRANGE = [-150, 70];
 const OFFSET = 625;
 
 const generateSpanPipeYCor = () => {
-  const n = Math.floor(
-    Math.random() * (YCORRANGE[1] - YCORRANGE[0] + 1) + YCORRANGE[0]
-  );
+  const n = -200;
   const offset_n = n + OFFSET;
+  //const offset_n = 830-;
   return { n, offset_n };
 };
 
@@ -96,6 +96,9 @@ const generatePipes = (world: World) => {
   Velocity.x[upipe] = -2;
   Velocity.x[dpipe] = -2;
 
+  Pipe.type[upipe] = 1;
+  Pipe.type[dpipe] = 0;
+
   return { upipe, dpipe };
 };
 
@@ -113,15 +116,26 @@ class Game extends Phaser.Scene {
   private pipeSystem?: System;
   private birdSystem?: System;
   private staticSpriteSystem?: System;
+  private drawingSystem?: System;
   private kb!: Phaser.Types.Input.Keyboard.CursorKeys;
 
   private playerGroup?: Physics.Arcade.Group;
   private boundingGroup?: Physics.Arcade.Group;
 
+  private gfx?: Phaser.GameObjects.Graphics;
+  private tfx?: Phaser.GameObjects.Text;
+
   private gameState?: GameState;
 
   private population?: Population;
-  private populationSize = 5;
+  private populationSize = 500;
+
+  private drawingConfig = {
+    x: 300,
+    y: 10,
+    width: 500,
+    height: 200,
+  };
 
   constructor() {
     super("game");
@@ -145,7 +159,7 @@ class Game extends Phaser.Scene {
     addComponent(this.world, Rotation, bird);
     addComponent(this.world, Velocity, bird);
     Position.x[bird] = 100;
-    Position.y[bird] = 300;
+    Position.y[bird] = Math.floor(Math.random() * 200 + 200);
     Sprite.texture[bird] = Textures.BirdUp;
     addComponent(this.world, Sprite, bird);
     addComponent(this.world, Player, bird);
@@ -154,10 +168,6 @@ class Game extends Phaser.Scene {
   }
 
   reinitialise() {
-    for (let i = 0; i < this.populationSize; i++) {
-      const bird = this.addBird();
-      this.population?.addPlayer(bird);
-    }
     const base = addEntity(this.world);
     addComponent(this.world, Position, base);
     addComponent(this.world, Sprite, base);
@@ -184,7 +194,9 @@ class Game extends Phaser.Scene {
       this.boundingGroup,
       function (player, brick) {
         const id = player.getData("id");
-        Player.dead[id] = true;
+        if (Player.alive[id]) {
+          Player.dead[id] = true;
+        }
       }
     );
   }
@@ -196,7 +208,13 @@ class Game extends Phaser.Scene {
     this.world = createWorld();
     this.world.dead = false;
 
+    for (let i = 0; i < this.populationSize; i++) {
+      const bird = this.addBird();
+      this.population?.addPlayer(bird);
+    }
+
     this.reinitialise();
+    this.gfx = this.add.graphics();
 
     this.birdSystem = createBirdSystem(this.playerGroup, this.kb);
     this.staticSpriteSystem = createStaticSpriteSystem(
@@ -205,6 +223,11 @@ class Game extends Phaser.Scene {
     );
     this.spriteSystem = createSpriteSystem(this.playerGroup, TextureKeys);
     this.pipeSystem = createPipeSystem(this, generatePipes);
+    this.drawingSystem = createDrawingSystem(
+      this,
+      this.gfx,
+      this.drawingConfig
+    );
   }
 
   update() {
@@ -212,8 +235,10 @@ class Game extends Phaser.Scene {
     this.spriteSystem?.(this.world);
     this.birdSystem?.(this.world, this.gameState, this.population);
     this.pipeSystem?.(this.world, this.gameState);
+    this.drawingSystem?.(this.population);
     this.staticSpriteSystem?.(this.world);
     if (this.gameState.reset) {
+      console.log("Reinitialise");
       this.reinitialise();
       this.gameState?.resetGame(false);
     }

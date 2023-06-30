@@ -26,25 +26,22 @@ class Genome {
 
     if (!offSpring) {
       for (let i = 0; i < this.inputs; i++) {
-        for (let i = 0; i < this.inputs; i++) {
-          this.nodes.push(new Node(this.nextNode, 0));
-          this.nextNode++;
-        }
+        this.nodes.push(new Node(this.nextNode, 0));
+        this.nextNode++;
+      }
 
-        for (let i = 0; i < this.outputs; i++) {
-          let node = new Node(this.nextNode, 1, true);
-          this.nodes.push(node);
-          this.nextNode++;
-        }
+      for (let i = 0; i < this.outputs; i++) {
+        let node = new Node(this.nextNode, 1, true);
+        this.nodes.push(node);
+        this.nextNode++;
+      }
 
-        for (let i = 0; i < this.inputs; i++) {
-          for (let j = this.inputs; j < this.outputs + this.inputs; j++) {
-            let weight =
-              Math.random() * this.inputs * Math.sqrt(2 / this.inputs);
-            this.connections.push(
-              new Connection(this.nodes[i], this.nodes[j], weight)
-            );
-          }
+      for (let i = 0; i < this.inputs; i++) {
+        for (let j = this.inputs; j < this.outputs + this.inputs; j++) {
+          let weight = Math.random() * this.inputs * Math.sqrt(2 / this.inputs);
+          this.connections.push(
+            new Connection(this.nodes[i], this.nodes[j], weight)
+          );
         }
       }
     }
@@ -97,18 +94,17 @@ class Genome {
   }
 
   mutate() {
+    let rand = Math.random();
+    if (Math.random() < 0.05) {
+      this.addNode();
+    }
+    if (Math.random() < 0.15) {
+      this.addConnection();
+    }
     if (Math.random() < 0.8) {
       this.connections.forEach((conn) => {
         conn.mutateWeight();
       });
-    }
-
-    if (Math.random() < 0.1) {
-      this.addConnection();
-    }
-
-    if (Math.random() < 0.05) {
-      this.addNode();
     }
   }
 
@@ -177,10 +173,14 @@ class Genome {
     // inherits parent nodes
     this.nodes.forEach((node) => {
       let newNode = node.clone();
-      if (node.output) {
+      if (newNode.output) {
         let partnerNode = partner.nodes[partner.getNode(node.id)];
+        if (Math.random() > 0.5) {
+          newNode.activationFunction = partnerNode.activationFunction;
+          newNode.bias = partnerNode.bias;
+        }
       }
-      offspring.nodes.push(node);
+      offspring.nodes.push(newNode);
     });
 
     // takes nodes from this and partner network

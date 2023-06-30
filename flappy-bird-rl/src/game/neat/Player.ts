@@ -1,6 +1,6 @@
 import Genome from "./Genome";
 
-let inputs = 2;
+let inputs = 3;
 let outputs = 1;
 let showBest = true;
 
@@ -36,8 +36,10 @@ class Player {
     let child = new Player();
     if (parent.fitness < this.fitness) {
       child.brain = this.brain.crossover(parent.brain);
+      child.id = this.id;
     } else {
       child.brain = parent.brain.crossover(this.brain);
+      child.id = parent.id;
     }
     child.brain.mutate();
     return child;
@@ -63,10 +65,14 @@ class Player {
     return this.decisions[maxIdx] >= 0 ? 1 : 0;
   }
 
-  update() {}
+  update(lastPassedPipe: number) {
+    if (lastPassedPipe !== -1) {
+      this.score += 1;
+    }
+  }
 
   calculateFitness() {
-    this.fitness = this.score;
+    this.fitness = this.score * this.score + this.lifespan / 10;
     this.fitness /= this.brain.calculateWeight();
   }
 

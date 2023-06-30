@@ -63,6 +63,7 @@ class Population {
         this.bestFitness = player.fitness;
         this.bestPlayer = player.clone();
         //this.bestPlayer.brain.id = "Best";
+        //this.bestPlayer.brain.draw();
       }
       if (player.fitness > currentMax) {
         currentMax = player.fitness;

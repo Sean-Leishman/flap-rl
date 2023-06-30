@@ -46,6 +46,7 @@ export const createStaticSpriteSystem = (
       const id = exitEntities[i];
       const sprite = spriteId.get(id);
       if (!sprite) continue;
+      //group.killAndHide(sprite);
       sprite.destroy();
       spriteId.delete(id);
       removeEntity(world, id);
