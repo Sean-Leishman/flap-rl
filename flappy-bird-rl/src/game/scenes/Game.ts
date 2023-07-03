@@ -57,7 +57,9 @@ const YCORRANGE = [-150, 70];
 const OFFSET = 625;
 
 const generateSpanPipeYCor = () => {
-  const n = -200;
+  const n = Math.floor(
+    Math.random() * (YCORRANGE[1] - YCORRANGE[0] + 1) + YCORRANGE[0]
+  );
   const offset_n = n + OFFSET;
   //const offset_n = 830-;
   return { n, offset_n };
