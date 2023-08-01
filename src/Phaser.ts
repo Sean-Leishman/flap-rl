@@ -4,6 +4,7 @@ import { Bootstrap, Game } from "./game/scenes";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
+  scene: [Game],
   backgroundColor: "#282c34",
   scale: {
     //mode: Phaser.Scale.ScaleModes.RESIZE,

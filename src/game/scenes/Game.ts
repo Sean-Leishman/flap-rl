@@ -237,9 +237,9 @@ class Game extends Phaser.Scene {
     this.spriteSystem?.(this.world);
     this.birdSystem?.(this.world, this.gameState, this.population);
     this.pipeSystem?.(this.world, this.gameState);
-    this.drawingSystem?.(this.population);
+    this.drawingSystem?.(this.world, this.population);
     this.staticSpriteSystem?.(this.world);
-    if (this.gameState.reset) {
+    if (this.gameState && this.gameState.reset) {
       console.log("Reinitialise");
       this.reinitialise();
       this.gameState?.resetGame(false);

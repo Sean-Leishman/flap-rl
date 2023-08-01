@@ -1,7 +1,10 @@
-import { defineSystem, World } from "bitecs";
+import { defineSystem, defineQuery, World } from "bitecs";
 import Population from "../neat/Population";
 import { Scene } from "phaser";
 import Genome from "../neat/Genome";
+import { addComponent } from "bitecs";
+import { addEntity } from "bitecs";
+import { TextElm } from "../constants";
 
 const map = (value: number, x1: number, y1: number, x2: number, y2: number) =>
   ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
@@ -14,7 +17,9 @@ export const createDrawingSystem = (
   const config = drawingConfig;
   let genome: Genome;
 
-  return defineSystem((population: Population) => {
+  let textEntities: Phaser.GameObjects.Text[] = [];
+
+  return defineSystem((world: World, population: Population) => {
     if (!population.bestPlayer) return;
     if (population.bestPlayer.brain === genome) return;
 
@@ -65,6 +70,7 @@ export const createDrawingSystem = (
       console.log(from, to);
       console.log(genome.connections[i].weight);
       let weight = genome.connections[i].weight.toFixed(2).toString();
+
       if (from && to) {
         graphics.beginPath();
         graphics.moveTo(from.x, from.y);
@@ -74,7 +80,14 @@ export const createDrawingSystem = (
 
         let midx = Math.floor((from.x + to.x) / 2);
         let midy = Math.floor((from.y + to.y) / 2);
-        scene.add.text(midx, midy, weight);
+
+        if (i >= textEntities.length) {
+          const text = scene.add.text(midx, midy, weight);
+          textEntities.push(text);
+        } else {
+          console.log(textEntities);
+          textEntities[i].setText(weight);
+        }
       }
     }
   });

@@ -23,6 +23,7 @@ import { addComponent } from "bitecs";
 import { GameState } from "../scenes/GameState";
 import Population from "../neat/Population";
 
+// TODO  Check for collisions here
 export const createBirdSystem = (
   group: Phaser.Physics.Arcade.Group,
   kb: Phaser.Types.Input.Keyboard.CursorKeys
