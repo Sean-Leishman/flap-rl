@@ -38,10 +38,25 @@ export const createBirdSystem = (
       const pipes = lastPipeQuery(world);
       let pipeId;
 
+      // Get the pipe closest to the bird in x-direction
+      // that is to the right of the bird
+      let minimum_pipe_x = 10000000;
       for (let j = 0; j < pipes.length; j++) {
         if (Pipe.type[pipes[j]] === 0) {
-          pipeId = pipes[j];
+          let x_pipe_pos = Position.x[pipes[j]];
+          if (x_pipe_pos > Position.x[entities[0]] - 30) {
+            if (minimum_pipe_x > x_pipe_pos) {
+              minimum_pipe_x = x_pipe_pos;
+              pipeId = j;
+            }
+          }
         }
+      }
+
+      let check_pipe_collision = false;
+      if (Math.abs(minimum_pipe_x - Position.x[entities[0]]) < 80) {
+        console.log("checking collision");
+        check_pipe_collision = true;
       }
 
       let done = false;
@@ -51,13 +66,19 @@ export const createBirdSystem = (
         getMove = true;
       }
 
+      // Choose to jump at intervals
       for (let i = 0; i < entities.length; i++) {
         const id = entities[i];
         const player = population.getPlayer(i);
 
-        if (getMove) {
-          if (player == null) return;
+        if (player == null) return;
 
+        if (check_pipe_collision) {
+          if (!Player.dead[id]) {
+          }
+        }
+
+        if (getMove) {
           if (!Player.dead[id]) {
             Player.alive[id] = true;
             if (kb.up.isDown || Player.input[id]) {
@@ -90,14 +111,14 @@ export const createBirdSystem = (
             player.update(Vision.lastPassedPipe[id]);
 
             done = false;
+            if (Position.y[id] < 450) {
+              Velocity.y[id] -= 0.2;
+              Position.y[id] -= Velocity.y[id];
+            }
           } else {
             //player.update(true);
             //gameState.resetGame(); Vision
           }
-        }
-        if (Position.y[id] < 450) {
-          Velocity.y[id] -= 0.2;
-          Position.y[id] -= Velocity.y[id];
         }
       }
 
@@ -120,7 +141,7 @@ export const createBirdSystem = (
           Position.y[id] = 200;
           Velocity.y[id] = 0;
           Player.dead[id] = false;
-          Player.alive[id] = false;
+          Player.alive[id] = true;
         }
         gameState.resetGame();
       }

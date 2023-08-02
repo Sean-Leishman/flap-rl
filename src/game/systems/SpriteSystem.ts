@@ -44,6 +44,11 @@ export const createSpriteSystem = (
       sprite.x = Position.x[id];
       sprite.y = Position.y[id];
       sprite.angle = Rotation.angle[id];
+      if (Player.dead[id]) {
+        sprite.visible = false;
+      } else {
+        sprite.visible = true;
+      }
     }
     const exitEntities = spriteQueryExit(world);
     for (let i = 0; i < exitEntities.length; i++) {

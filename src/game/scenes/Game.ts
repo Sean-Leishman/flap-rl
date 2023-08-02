@@ -198,6 +198,7 @@ class Game extends Phaser.Scene {
         const id = player.getData("id");
         if (Player.alive[id]) {
           Player.dead[id] = true;
+          player.visible = false;
         }
       }
     );
