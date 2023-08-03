@@ -47,7 +47,7 @@ export const createBirdSystem = (
           if (x_pipe_pos > Position.x[entities[0]] - 30) {
             if (minimum_pipe_x > x_pipe_pos) {
               minimum_pipe_x = x_pipe_pos;
-              pipeId = j;
+              pipeId = pipes[j];
             }
           }
         }
@@ -59,8 +59,8 @@ export const createBirdSystem = (
         check_pipe_collision = true;
       }
 
-      let done = false;
-      let getMove = false;
+      let done = true;
+      let getMove = true;
       if (itr % 1 === 0) {
         done = true;
         getMove = true;
@@ -89,7 +89,7 @@ export const createBirdSystem = (
               Position.x[pipeId] - Position.x[id];
             // Check if pipe is consistent from line 38 pipeId = pipes[0]
             Vision.heightBelowTopPipe[id] =
-              Position.y[id] - (Position.y[pipeId] + 235);
+              Position.y[id] - (Position.y[pipeId] + 235 + 100); // + offset to middle of gap
             if (
               Position.x[pipeId] - 30 < Position.x[id] &&
               Vision.lastPassedPipe[id] !== pipeId &&
@@ -104,11 +104,12 @@ export const createBirdSystem = (
             player.look(
               Vision.yVel[id],
               Vision.distanceToClosestPipe[id],
-              Vision.heightBelowTopPipe[id]
+              Vision.heightBelowTopPipe[id],
+              Position.y[id]
             );
             player.think();
             Player.input[id] = player.move();
-            player.update(Vision.lastPassedPipe[id]);
+            player.update(Vision.lastPassedPipe[id], 1);
 
             done = false;
             if (Position.y[id] < 450) {
@@ -142,6 +143,8 @@ export const createBirdSystem = (
           Velocity.y[id] = 0;
           Player.dead[id] = false;
           Player.alive[id] = true;
+
+          Vision.timeAlive[id] = 0;
         }
         gameState.resetGame();
       }
