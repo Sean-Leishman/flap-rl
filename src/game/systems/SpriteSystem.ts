@@ -29,6 +29,7 @@ export const createSpriteSystem = (
       const texture = textures[textId];
       //const sprite = scene.physics.add.sprite(0, 0, textId);
       const sprite = group.get(Position.x[id], Position.y[id], textId);
+      sprite.body.debugShowBody = false;
       sprite.scale = 1.5;
       spriteId.set(id, sprite);
 

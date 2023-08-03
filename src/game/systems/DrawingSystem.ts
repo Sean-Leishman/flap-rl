@@ -27,7 +27,7 @@ export const createDrawingSystem = (
 
     genome = population.bestPlayer.brain;
 
-    let layerDistance = 200;
+    let layerDistance = 150;
     let circleDistance = 50;
 
     let y = circleDistance;
@@ -41,11 +41,13 @@ export const createDrawingSystem = (
     for (let i = 0; i < genome.layers; i++) {
       let x = config.x + (i + 1) * layerDistance;
       for (let j = 0; j < genome.nodes.length; j++) {
-        graphics.fillStyle(0xffffff);
-        graphics.fillCircle(x, y, 20);
-        nodesPositions.push({ x, y });
-        nodesIdx.push(genome.nodes[j].id);
-        y += 50;
+        if (genome.nodes[j].layer == i) {
+          graphics.fillStyle(0xffffff);
+          graphics.fillCircle(x, y, 20);
+          nodesPositions.push({ x, y });
+          nodesIdx.push(genome.nodes[j].id);
+          y += 50;
+        }
       }
       y = circleDistance;
     }
