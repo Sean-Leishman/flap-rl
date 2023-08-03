@@ -130,7 +130,7 @@ class Game extends Phaser.Scene {
   private gameState?: GameState;
 
   private population?: Population;
-  private populationSize = 500;
+  private populationSize = 200;
 
   private drawingConfig = {
     x: 300,

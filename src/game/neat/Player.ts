@@ -1,6 +1,6 @@
 import Genome from "./Genome";
 
-let inputs = 3;
+let inputs = 4;
 let outputs = 1;
 let showBest = true;
 
@@ -46,8 +46,13 @@ class Player {
   }
 
   // Make general purpose?
-  look(yVel: number, distToPipe: number, heightBelowPipe: number) {
-    this.vision = [yVel, distToPipe, heightBelowPipe];
+  look(
+    yVel: number,
+    distToPipe: number,
+    heightBelowPipe: number,
+    positionY: number
+  ) {
+    this.vision = [yVel, distToPipe, heightBelowPipe, positionY];
   }
 
   think() {
@@ -55,7 +60,6 @@ class Player {
   }
 
   move() {
-    // Check possible decisions
     let maxIdx = 0;
     for (let i = 0; i < this.decisions.length; i++) {
       if (this.decisions[i] > this.decisions[maxIdx]) {
@@ -65,10 +69,11 @@ class Player {
     return this.decisions[maxIdx] >= 0 ? 1 : 0;
   }
 
-  update(lastPassedPipe: number) {
+  update(lastPassedPipe: number, timeAlive: number) {
     if (lastPassedPipe !== -1) {
-      this.score += 1;
+      this.score += 10;
     }
+    this.score += 0.0001;
   }
 
   calculateFitness() {
