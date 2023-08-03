@@ -32,4 +32,5 @@ export const Vision = defineComponent({
   heightBelowTopPipe: Types.f32,
   lastPassedPipe: Types.f32,
   hasPassed: Types.ui8,
+  timeAlive: Types.ui8,
 });

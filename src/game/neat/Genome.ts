@@ -17,7 +17,7 @@ class Genome {
     this.outputs = outputs;
 
     this.id = id;
-    this.layers = 2;
+    this.layers = 3;
     this.nextNode = 0; // bias node
 
     this.nodes = []; // nodes in network
@@ -31,7 +31,7 @@ class Genome {
       }
 
       for (let i = 0; i < this.outputs; i++) {
-        let node = new Node(this.nextNode, 1, true);
+        let node = new Node(this.nextNode, this.layers - 1, true);
         this.nodes.push(node);
         this.nextNode++;
       }
