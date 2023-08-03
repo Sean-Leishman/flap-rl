@@ -30,12 +30,13 @@ export const createBirdSystem = (
 ) => {
   const birdQuery = defineQuery([Position, Velocity, Player, Sprite]);
   const lastPipeQuery = defineQuery([Position, Velocity, LastPipe, Sprite]);
+  const pipeQuery = defineQuery([Position, Velocity, Pipe, Sprite]);
   let itr = 1;
 
   return defineSystem(
     (world: World, gameState: GameState, population: Population) => {
       const entities = birdQuery(world);
-      const pipes = lastPipeQuery(world);
+      const pipes = pipeQuery(world);
       let pipeId;
 
       // Get the pipe closest to the bird in x-direction
@@ -44,7 +45,7 @@ export const createBirdSystem = (
       for (let j = 0; j < pipes.length; j++) {
         if (Pipe.type[pipes[j]] === 0) {
           let x_pipe_pos = Position.x[pipes[j]];
-          if (x_pipe_pos > Position.x[entities[0]] - 30) {
+          if (x_pipe_pos > Position.x[entities[0]] - 50) {
             if (minimum_pipe_x > x_pipe_pos) {
               minimum_pipe_x = x_pipe_pos;
               pipeId = pipes[j];
