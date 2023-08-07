@@ -22,14 +22,6 @@ import {
 } from "../systems";
 import { System } from "bitecs";
 
-import bird1 from "../../assets/bird1.png";
-import bird2 from "../../assets/bird2.png";
-import bird3 from "../../assets/bird3.png";
-import pipe from "../../assets/pipe.png";
-import dpipe from "../../assets/dpipe.png";
-import base from "../../assets/base.png";
-import bg from "../../assets/bg.png";
-
 import "./GameState";
 import { GameState } from "./GameState";
 import Population from "../neat/Population";
@@ -44,7 +36,15 @@ enum Textures {
   Bg = 6,
 }
 
-const TextureKeys = [bird1, bird2, bird3, pipe, dpipe, base, bg];
+const TextureKeys = {
+  bird1: "assets/bird1.png",
+  bird2: "assets/bird2.png",
+  bird3: "assets/bird3.png",
+  up_pipe: "assets/pipe.png",
+  down_pipe: "assets/dpipe.png",
+  base: "assets/base.png",
+  bg: "assets/bg.png",
+};
 const YCORRANGE = [-150, 70];
 const OFFSET = 625;
 
@@ -141,8 +141,10 @@ class Game extends Phaser.Scene {
   }
 
   preload() {
-    for (let i = 0; i < TextureKeys.length; i++) {
-      this.load.image(i.toString(), TextureKeys[i]);
+    let i = 0;
+    for (const [_, value] of Object.entries(TextureKeys)) {
+      this.load.image(i.toString(), value);
+      i++;
     }
   }
 
@@ -197,9 +199,6 @@ class Game extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = this.scale;
-
-    console.log(width, height);
     this.world = createWorld();
     this.world.dead = false;
 
@@ -230,7 +229,6 @@ class Game extends Phaser.Scene {
     this.drawingSystem?.(this.population);
     this.staticSpriteSystem?.(this.world);
     if (this.gameState && this.gameState.reset) {
-      console.log("Reinitialise");
       this.reinitialise();
       this.gameState?.resetGame(false);
     }

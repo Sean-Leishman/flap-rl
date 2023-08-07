@@ -21,8 +21,6 @@ export const createDrawingSystem = (
     if (!population.bestPlayer) return;
     if (population.bestPlayer.brain === genome) return;
 
-    console.log("draw");
-
     genome = population.bestPlayer.brain;
 
     let layerDistance = 150;
@@ -32,8 +30,6 @@ export const createDrawingSystem = (
 
     let nodesPositions: any[] = [];
     let nodesIdx: any[] = [];
-
-    console.log(genome.nodes);
 
     for (let i = 0; i < genome.layers; i++) {
       let x = config.x + (i + 1) * layerDistance;
@@ -70,8 +66,6 @@ export const createDrawingSystem = (
         0xffffff
       );
 
-      console.log(from, to);
-      console.log(genome.connections[i].weight);
       let weight = genome.connections[i].weight.toFixed(2).toString();
 
       if (from && to) {
@@ -88,7 +82,6 @@ export const createDrawingSystem = (
           const text = scene.add.text(midx, midy, weight);
           textEntities.push(text);
         } else {
-          console.log(textEntities);
           textEntities[i].setText(weight);
         }
       }
