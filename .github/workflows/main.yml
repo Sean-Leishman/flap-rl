@@ -1,41 +1,41 @@
 name: Deploy to GitHub pages
 on:
   push:
-    branches: [ main ]
+    branches: [master]
   workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        set-safe-directory: '*'
+      - uses: actions/checkout@v2
+        with:
+          set-safe-directory: "*"
 
-    - name: Generate static vite
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
-    - run: npm ci
-    - run: npm run build
+      - name: Generate static vite
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - run: npm ci
+      - run: npm run build
 
-    - name: Init new repo in dist folder and commit generated files
-      run: |
-        ls -l -a
-        cd dist
-        ls -l -a
-        git init
-        git config --local user.email "leishmansean@gmail.com"
-        git config --local user.name "Sean Leishman"
-        git add .
-        git commit -m 'deploy'
+      - name: Init new repo in dist folder and commit generated files
+        run: |
+          ls -l -a
+          cd dist
+          ls -l -a
+          git init
+          git config --local user.email "leishmansean@gmail.com"
+          git config --local user.name "Sean Leishman"
+          git add .
+          git commit -m 'deploy'
 
-        git config --global --add safe.directory '*'
+          git config --global --add safe.directory '*'
 
-    - name: Force push to destination branch
-      uses: ad-m/github-push-action@v0.5.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        force: true
-        directory: ./dist
+      - name: Force push to destination branch
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          force: true
+          directory: ./dist
