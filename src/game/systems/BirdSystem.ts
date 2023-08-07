@@ -32,12 +32,6 @@ export const createBirdSystem = (
         }
       }
 
-      let check_pipe_collision = false;
-      if (Math.abs(minimum_pipe_x - Position.x[entities[0]]) < 80) {
-        console.log("checking collision");
-        check_pipe_collision = true;
-      }
-
       let done = true;
       let getMove = true;
       if (itr % 1 === 0) {
@@ -51,11 +45,6 @@ export const createBirdSystem = (
         const player = population.getPlayer(i);
 
         if (player == null) return;
-
-        if (check_pipe_collision) {
-          if (!Player.dead[id]) {
-          }
-        }
 
         if (getMove) {
           if (!Player.dead[id]) {
@@ -110,7 +99,6 @@ export const createBirdSystem = (
       itr++;
 
       if (done) {
-        console.log("all dead");
         itr = 1;
         population.naturalSelection();
         for (let i = 0; i < entities.length; i++) {
