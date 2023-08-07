@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import { Bootstrap, Game } from "./game/scenes";
+import { Game } from "./game/scenes";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,

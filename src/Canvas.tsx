@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import "./index.css";
+import { useEffect, useRef } from "react";
 import { config } from "./Phaser";
 
 import "phaser";
-import { Game } from "./game/scenes";
 
 function Canvas() {
   const sceneGeneratedRef = useRef(false);
@@ -13,7 +11,7 @@ function Canvas() {
     async function initPhaser() {
       const scenes = await import("./game/scenes");
 
-      const game = new Phaser.Game({
+      new Phaser.Game({
         ...config,
         parent: "phaser-container",
         scene: [scenes.Game],

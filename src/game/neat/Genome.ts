@@ -57,7 +57,7 @@ class Genome {
       node.outputSum = inputValues[idx];
     });
 
-    this.nodes.forEach((node, idx) => {
+    this.nodes.forEach((node) => {
       node.engage();
 
       if (node.output) {
@@ -69,7 +69,7 @@ class Genome {
   }
 
   generateNetwork() {
-    this.nodes.forEach((node, idx) => {
+    this.nodes.forEach((node) => {
       node.outputConnections = [];
       //node.outputConnections.splice(0, node.outputConnections.length);
     });
@@ -94,7 +94,6 @@ class Genome {
   }
 
   mutate() {
-    let rand = Math.random();
     if (Math.random() < 0.05) {
       this.addNode();
     }
@@ -155,7 +154,7 @@ class Genome {
     if (this.nodes[node1].layer > this.nodes[node2].layer) {
       let temp = node1;
       node1 = node2;
-      node2 = node1;
+      node2 = temp;
     }
 
     let newConnection = new Connection(
@@ -184,7 +183,6 @@ class Genome {
     });
 
     // takes nodes from this and partner network
-    let maxlayer = 0;
     this.connections.forEach((conn) => {
       let idx = this.commonConnections(
         conn.getInnovationNumber(),
@@ -231,7 +229,7 @@ class Genome {
   }
 
   nodesConnected(node1: Node, node2: Node) {
-    for (let conn in this.connections) {
+    for (let conn of this.connections) {
       if (conn.fromNode == node1 && conn.toNode == node2) {
         return true;
       }

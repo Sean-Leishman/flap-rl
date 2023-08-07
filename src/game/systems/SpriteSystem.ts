@@ -1,21 +1,10 @@
 import { defineQuery, enterQuery, exitQuery, World } from "bitecs";
-import { Scene, GameObjects } from "phaser";
-import {
-  Sprite,
-  Position,
-  Rotation,
-  Velocity,
-  Player,
-  Pipe,
-  Static,
-} from "../constants";
+import { GameObjects } from "phaser";
+import { Sprite, Position, Rotation, Player } from "../constants";
 import { defineSystem } from "bitecs";
 import { removeEntity } from "bitecs";
 
-export const createSpriteSystem = (
-  group: Phaser.Physics.Arcade.Group,
-  textures: string[]
-) => {
+export const createSpriteSystem = (group: Phaser.Physics.Arcade.Group) => {
   const spriteId = new Map<number, GameObjects.Sprite>();
   const spriteQuery = defineQuery([Sprite, Player, Position, Rotation]);
   const spriteQueryEnter = enterQuery(spriteQuery);
@@ -26,7 +15,6 @@ export const createSpriteSystem = (
     for (let i = 0; i < enterEntities.length; i++) {
       const id = enterEntities[i];
       const textId = Sprite.texture[id];
-      const texture = textures[textId];
       //const sprite = scene.physics.add.sprite(0, 0, textId);
       const sprite = group.get(Position.x[id], Position.y[id], textId);
       sprite.body.debugShowBody = false;

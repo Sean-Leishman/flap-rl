@@ -2,7 +2,6 @@ import Genome from "./Genome";
 
 let inputs = 4;
 let outputs = 1;
-let showBest = true;
 
 class Player {
   brain: Genome;
@@ -20,6 +19,7 @@ class Player {
     this.brain = new Genome(inputs, outputs, this.id);
 
     this.score = 1;
+    this.fitness = 0;
     this.lifespan = 0;
     this.dead = false;
     this.decisions = [];
@@ -33,7 +33,7 @@ class Player {
   }
 
   crossover(parent: Player) {
-    let child = new Player();
+    let child = new Player(-1);
     if (parent.fitness < this.fitness) {
       child.brain = this.brain.crossover(parent.brain);
       child.id = this.id;
@@ -69,10 +69,11 @@ class Player {
     return this.decisions[maxIdx] >= 0 ? 1 : 0;
   }
 
-  update(lastPassedPipe: number, timeAlive: number) {
+  update(lastPassedPipe: number) {
     if (lastPassedPipe !== -1) {
       this.score += 10;
     }
+    // being alive
     this.score += 0.0001;
   }
 

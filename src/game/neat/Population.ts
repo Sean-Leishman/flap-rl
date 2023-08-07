@@ -14,6 +14,7 @@ class Population {
     this.generation = 0;
     this.matingPool = [];
     this.size = size;
+    this.bestPlayer = new Player(-1);
   }
 
   addPlayer(entityId: number) {
@@ -30,11 +31,11 @@ class Population {
   naturalSelection() {
     this.calculateFitness();
 
-    let averageSum = this.getAverageScore();
+    this.getAverageScore();
     let children: Player[] = [];
 
     this.fillMatingPool();
-    this.population.forEach((player) => {
+    this.population.forEach((_) => {
       let parent1 = this.selectPlayer();
       let parent2 = this.selectPlayer();
       if (parent1.fitness > parent2.fitness) {

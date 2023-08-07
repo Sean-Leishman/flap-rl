@@ -1,10 +1,8 @@
-import { defineSystem, defineQuery, World } from "bitecs";
+import { defineSystem } from "bitecs";
 import Population from "../neat/Population";
+import Node from "../neat/Node";
 import { Scene } from "phaser";
 import Genome from "../neat/Genome";
-import { addComponent } from "bitecs";
-import { addEntity } from "bitecs";
-import { TextElm } from "../constants";
 
 const map = (value: number, x1: number, y1: number, x2: number, y2: number) =>
   ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
@@ -19,7 +17,7 @@ export const createDrawingSystem = (
 
   let textEntities: Phaser.GameObjects.Text[] = [];
 
-  return defineSystem((world: World, population: Population) => {
+  return defineSystem((population: Population) => {
     if (!population.bestPlayer) return;
     if (population.bestPlayer.brain === genome) return;
 
@@ -32,7 +30,6 @@ export const createDrawingSystem = (
 
     let y = circleDistance;
 
-    let allnodes = [];
     let nodesPositions: any[] = [];
     let nodesIdx: any[] = [];
 
@@ -60,9 +57,13 @@ export const createDrawingSystem = (
       }
 
       let from =
-        nodesPositions[nodesIdx.indexOf(genome.connections[i].fromNode.id)];
+        nodesPositions[
+          nodesIdx.indexOf((genome.connections[i].fromNode as Node).id)
+        ];
       let to =
-        nodesPositions[nodesIdx.indexOf(genome.connections[i].toNode.id)];
+        nodesPositions[
+          nodesIdx.indexOf((genome.connections[i].toNode as Node).id)
+        ];
 
       graphics.lineStyle(
         map(Math.abs(genome.connections[i].weight), 0, 1, 0, 3),

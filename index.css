@@ -13,7 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  diplay: flex;
+  display: flex;
   align-items: center;
 }
 

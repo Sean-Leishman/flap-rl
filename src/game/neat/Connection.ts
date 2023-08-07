@@ -1,3 +1,5 @@
+import Node from "./Node";
+
 class Connection {
   fromNode: Node;
   toNode: Node;

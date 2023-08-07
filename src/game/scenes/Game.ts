@@ -1,15 +1,7 @@
 import Phaser, { Physics } from "phaser";
-import {
-  createWorld,
-  addEntity,
-  Types,
-  addComponent,
-  defineComponent,
-  IWorld,
-} from "bitecs";
+import { createWorld, addEntity, addComponent, World, IWorld } from "bitecs";
 
 import {
-  Vector2,
   Position,
   Rotation,
   Velocity,
@@ -125,7 +117,6 @@ class Game extends Phaser.Scene {
   private boundingGroup?: Physics.Arcade.Group;
 
   private gfx?: Phaser.GameObjects.Graphics;
-  private tfx?: Phaser.GameObjects.Text;
 
   private gameState?: GameState;
 
@@ -186,19 +177,20 @@ class Game extends Phaser.Scene {
     Position.y[top] = -100;
     Sprite.texture[top] = Textures.Ground;
 
-    const pipes = addPipes(this.world);
+    addPipes(this.world);
 
     this.playerGroup = this.physics.add.group();
     this.boundingGroup = this.physics.add.group();
 
-    const collider = this.physics.add.collider(
+    this.physics.add.collider(
       this.playerGroup,
       this.boundingGroup,
-      function (player, brick) {
-        const id = player.getData("id");
+      function (player) {
+        const id = (
+          player as Phaser.Types.Physics.Arcade.GameObjectWithBody
+        ).getData("id");
         if (Player.alive[id]) {
           Player.dead[id] = true;
-          player.visible = false;
         }
       }
     );
@@ -219,13 +211,10 @@ class Game extends Phaser.Scene {
     this.reinitialise();
     this.gfx = this.add.graphics();
 
-    this.birdSystem = createBirdSystem(this.playerGroup, this.kb);
-    this.staticSpriteSystem = createStaticSpriteSystem(
-      this.boundingGroup,
-      TextureKeys
-    );
-    this.spriteSystem = createSpriteSystem(this.playerGroup, TextureKeys);
-    this.pipeSystem = createPipeSystem(this, generatePipes);
+    this.birdSystem = createBirdSystem(this.kb);
+    this.staticSpriteSystem = createStaticSpriteSystem(this.boundingGroup!);
+    this.spriteSystem = createSpriteSystem(this.playerGroup!);
+    this.pipeSystem = createPipeSystem(generatePipes);
     this.drawingSystem = createDrawingSystem(
       this,
       this.gfx,
@@ -238,7 +227,7 @@ class Game extends Phaser.Scene {
     this.spriteSystem?.(this.world);
     this.birdSystem?.(this.world, this.gameState, this.population);
     this.pipeSystem?.(this.world, this.gameState);
-    this.drawingSystem?.(this.world, this.population);
+    this.drawingSystem?.(this.population);
     this.staticSpriteSystem?.(this.world);
     if (this.gameState && this.gameState.reset) {
       console.log("Reinitialise");

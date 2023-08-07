@@ -1,17 +1,8 @@
-import {
-  defineQuery,
-  enterQuery,
-  exitQuery,
-  World,
-  defineSystem,
-} from "bitecs";
-import { Scene, GameObjects } from "phaser";
+import { defineQuery, World, defineSystem } from "bitecs";
 import {
   Sprite,
   Position,
-  Rotation,
   Velocity,
-  Player,
   Pipe,
   LastPipe,
   RecentPipe,
@@ -21,7 +12,7 @@ import { removeEntity } from "bitecs";
 import { addComponent } from "bitecs";
 import { GameState } from "../scenes/GameState";
 
-export const createPipeSystem = (scene: Scene, generatePipes: Function) => {
+export const createPipeSystem = (generatePipes: Function) => {
   const pipeQuery = defineQuery([Position, Velocity, Pipe, Sprite]);
   const lastPipeQuery = defineQuery([Position, Velocity, LastPipe, Sprite]);
   const recentPipeQuery = defineQuery([Position, Velocity, RecentPipe, Sprite]);

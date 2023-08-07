@@ -1,35 +1,13 @@
-import {
-  defineQuery,
-  enterQuery,
-  exitQuery,
-  World,
-  defineSystem,
-} from "bitecs";
-import { Scene, GameObjects } from "phaser";
-import {
-  Sprite,
-  Position,
-  Rotation,
-  Velocity,
-  Player,
-  Pipe,
-  LastPipe,
-  RecentPipe,
-  Vision,
-} from "../constants";
-import { removeComponent } from "bitecs";
-import { removeEntity } from "bitecs";
-import { addComponent } from "bitecs";
+import { defineQuery, World, defineSystem } from "bitecs";
+import { Sprite, Position, Velocity, Player, Pipe, Vision } from "../constants";
 import { GameState } from "../scenes/GameState";
 import Population from "../neat/Population";
 
 // TODO  Check for collisions here
 export const createBirdSystem = (
-  group: Phaser.Physics.Arcade.Group,
   kb: Phaser.Types.Input.Keyboard.CursorKeys
 ) => {
   const birdQuery = defineQuery([Position, Velocity, Player, Sprite]);
-  const lastPipeQuery = defineQuery([Position, Velocity, LastPipe, Sprite]);
   const pipeQuery = defineQuery([Position, Velocity, Pipe, Sprite]);
   let itr = 1;
 
@@ -110,7 +88,7 @@ export const createBirdSystem = (
             );
             player.think();
             Player.input[id] = player.move();
-            player.update(Vision.lastPassedPipe[id], 1);
+            player.update(Vision.lastPassedPipe[id]);
 
             done = false;
             if (Position.y[id] < 450) {
