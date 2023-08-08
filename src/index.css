@@ -73,3 +73,6 @@ button:focus-visible {
 .Canvas {
   text-align: center;
 }
+#phaser-container canvas {
+  border-radius: 25px;
+}

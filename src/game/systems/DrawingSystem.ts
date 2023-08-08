@@ -35,7 +35,7 @@ export const createDrawingSystem = (
       let x = config.x + (i + 1) * layerDistance;
       for (let j = 0; j < genome.nodes.length; j++) {
         if (genome.nodes[j].layer == i) {
-          graphics.fillStyle(0xffffff);
+          graphics.fillStyle(0x000000);
           graphics.fillCircle(x, y, 20);
           nodesPositions.push({ x, y });
           nodesIdx.push(genome.nodes[j].id);
@@ -47,9 +47,9 @@ export const createDrawingSystem = (
 
     for (let i = 0; i < genome.connections.length; i++) {
       if (genome.connections[i].enabled) {
-        graphics.lineStyle(1, 0xffffff);
+        graphics.lineStyle(1, 0x000000);
       } else {
-        graphics.lineStyle(0.5, 0x0f0f0f);
+        graphics.lineStyle(0.5, 0x000000);
       }
 
       let from =
@@ -63,7 +63,7 @@ export const createDrawingSystem = (
 
       graphics.lineStyle(
         map(Math.abs(genome.connections[i].weight), 0, 1, 0, 3),
-        0xffffff
+        0x000000
       );
 
       let weight = genome.connections[i].weight.toFixed(2).toString();
@@ -80,6 +80,7 @@ export const createDrawingSystem = (
 
         if (i >= textEntities.length) {
           const text = scene.add.text(midx, midy, weight);
+          text.setColor("black");
           textEntities.push(text);
         } else {
           textEntities[i].setText(weight);

@@ -5,7 +5,7 @@ import { Game } from "./game/scenes";
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   scene: [Game],
-  backgroundColor: "#282c34",
+  backgroundColor: "#FFEECC",
   scale: {
     //mode: Phaser.Scale.ScaleModes.RESIZE,
     //width: window.innerWidth,
