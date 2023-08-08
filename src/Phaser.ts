@@ -6,13 +6,11 @@ const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   scene: [Game],
   backgroundColor: "#FFEECC",
+  width: 800,
+  height: 500,
   scale: {
-    //mode: Phaser.Scale.ScaleModes.RESIZE,
-    //width: window.innerWidth,
-    //height: window.innerHeight,
-    mode: Phaser.Scale.ScaleModes.NONE,
-    width: 800,
-    height: 600,
+    // mode: Phaser.Scale.FIT,
+    // autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
   },
   physics: {
     default: "arcade",

@@ -1,5 +1,6 @@
 import Phaser, { Physics } from "phaser";
 import { createWorld, addEntity, addComponent, World, IWorld } from "bitecs";
+import { store } from "../../ui/ControlGame";
 
 import {
   Position,
@@ -138,6 +139,10 @@ class Game extends Phaser.Scene {
     this.kb = this.input.keyboard?.createCursorKeys()!;
     this.gameState = new GameState();
     this.population = new Population(this.populationSize);
+
+    store.subscribe(() => {
+      this.gameState?.pausePlayGame(store.getState().value);
+    });
   }
 
   preload() {
@@ -222,6 +227,7 @@ class Game extends Phaser.Scene {
   }
 
   update() {
+    if (!this.gameState?.pause) return;
     if (!this.world) return;
     this.spriteSystem?.(this.world);
     this.birdSystem?.(this.world, this.gameState, this.population);
