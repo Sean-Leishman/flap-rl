@@ -29,7 +29,9 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  place-items: start;
+  justify-content: center;
+  width: 100%;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -70,9 +72,15 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
 .Canvas {
+  width: 800px;
+  justify-self: center;
+  display: flex;
   text-align: center;
+  justify-content: center;
 }
+
 #phaser-container canvas {
   border-radius: 25px;
 }
