@@ -1,67 +1,14 @@
 import "./ControlGame.css";
 
-import { createSlice, configureStore } from "@reduxjs/toolkit";
 import { useState } from "react";
-
+import { StoreState, store } from "../main";
 import Slider from "@mui/material/Slider";
-import { pipe } from "bitecs";
-
-const playSlice = createSlice({
-  name: "play",
-  initialState: {
-    value: false,
-    generation: 0,
-    score: 0,
-    number_alive: 200,
-    pipe_speed: -2,
-    bird_gravity: 0.2,
-    bird_jump_speed: 4,
-  },
-  reducers: {
-    setTrue: (state) => {
-      state.value = true;
-    },
-    setFalse: (state) => {
-      state.value = false;
-    },
-    incrementGeneration: (state) => {
-      state.generation += 1;
-    },
-    incrementScore: (state) => {
-      state.score += 1;
-    },
-    decrementAlive: (state) => {
-      state.number_alive -= 1;
-    },
-    resetStats: (state, action) => {
-      state.score = 0;
-      state.number_alive = action.payload.num_alive;
-    },
-    setPipeSpeed: (state, action) => {
-      state.pipe_speed = action.payload;
-    },
-    setBirdGravity: (state, action) => {
-      state.bird_gravity = action.payload;
-    },
-    setBirdJumpSpeed: (state, action) => {
-      state.bird_jump_speed = action.payload;
-    },
-  },
-});
-
-export const { setTrue, setFalse } = playSlice.actions;
-
-export const store = configureStore({
-  reducer: playSlice.reducer,
-});
+import { useSelector } from "react-redux";
 
 function ControlGame() {
   const [play_btn, set_play_btn] = useState("Play");
-  const [generation, set_generation] = useState(0);
-  const [score, set_score] = useState(0);
-  const [num_alive, set_num_alive] = useState(200);
 
-  let pipe_speed = -2;
+  let pipe_speed = 1;
   let bird_gravity = 0.2;
   let bird_jump_speed = 4;
 
@@ -75,7 +22,7 @@ function ControlGame() {
     set_play_btn(store.getState().value ? "Pause" : "Play");
   }
 
-  function handlePipeSpeedSlider(event, value) {
+  function handlePipeSpeedSlider(_, value) {
     if (value == pipe_speed) {
       return;
     }
@@ -83,7 +30,7 @@ function ControlGame() {
     store.dispatch({ type: "play/setPipeSpeed", payload: value * -2 });
   }
 
-  function handleBirdSpeedSlider(event, value) {
+  function handleBirdSpeedSlider(_, value) {
     if (value == bird_gravity) {
       return;
     }
@@ -91,7 +38,7 @@ function ControlGame() {
     store.dispatch({ type: "play/setBirdGravity", payload: value });
   }
 
-  function handleBirdJumpSpeed(event, value) {
+  function handleBirdJumpSpeed(_, value) {
     if (value == bird_jump_speed) {
       return;
     }
@@ -99,11 +46,9 @@ function ControlGame() {
     store.dispatch({ type: "play/setBirdJumpSpeed", payload: value });
   }
 
-  store.subscribe(() => {
-    set_generation(store.getState().generation);
-    set_score(store.getState().score);
-    set_num_alive(store.getState().number_alive);
-  });
+  const generation = useSelector((state: StoreState) => state.generation);
+  const score = useSelector((state: StoreState) => state.score);
+  const num_alive = useSelector((state: StoreState) => state.number_alive);
 
   return (
     <div className="controls-container">
@@ -130,7 +75,7 @@ function ControlGame() {
               min={0}
               step={0.05}
               onChangeCommitted={handlePipeSpeedSlider}
-              valueLabelDisplay={"on"}
+              // valueLabelDisplay={"on"}
             />
           </div>
         </div>
@@ -146,7 +91,7 @@ function ControlGame() {
               min={0}
               step={0.05}
               onChangeCommitted={handleBirdSpeedSlider}
-              valueLabelDisplay={"on"}
+              // valueLabelDisplay={"on"}
             />
           </div>
         </div>
@@ -162,7 +107,7 @@ function ControlGame() {
               min={1}
               step={0.5}
               onChangeCommitted={handleBirdJumpSpeed}
-              valueLabelDisplay={"on"}
+              // valueLabelDisplay={"on"}
             />
           </div>
         </div>

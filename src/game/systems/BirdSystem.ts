@@ -11,7 +11,7 @@ import {
 import { GameState } from "../scenes/GameState";
 import Population from "../neat/Population";
 
-import { store } from "../../ui/ControlGame";
+import { store } from "../../main";
 import { pipe } from "bitecs";
 
 // TODO  Check for collisions here

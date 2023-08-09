@@ -1,6 +1,7 @@
 import Phaser, { Physics } from "phaser";
 import { createWorld, addEntity, addComponent, World, IWorld } from "bitecs";
-import { store } from "../../ui/ControlGame";
+
+import { store } from "../../main";
 
 import {
   Position,
@@ -262,7 +263,6 @@ class Game extends Phaser.Scene {
     if (this.gameState && this.gameState.reset) {
       this.reinitialise();
       this.gameState?.resetGame(false);
-      store.dispatch({ type: "play/incrementGeneration" });
       store.dispatch({
         type: "play/resetStats",
         payload: { num_alive: this.population?.population.length },

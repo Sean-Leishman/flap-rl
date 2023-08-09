@@ -11,7 +11,8 @@ import { removeComponent } from "bitecs";
 import { removeEntity } from "bitecs";
 import { addComponent } from "bitecs";
 import { GameState } from "../scenes/GameState";
-import { store } from "../../ui/ControlGame";
+
+import { store } from "../../main";
 
 export const createPipeSystem = (
   generatePipes: Function,
