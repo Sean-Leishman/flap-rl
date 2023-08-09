@@ -1,18 +1,9 @@
 import { defineQuery, World, defineSystem } from "bitecs";
-import {
-  Sprite,
-  Position,
-  Velocity,
-  Player,
-  Pipe,
-  Vision,
-  Acceleration,
-} from "../constants";
+import { Sprite, Position, Velocity, Player, Pipe, Vision } from "../constants";
 import { GameState } from "../scenes/GameState";
 import Population from "../neat/Population";
 
 import { store } from "../../main";
-import { pipe } from "bitecs";
 
 // TODO  Check for collisions here
 export const createBirdSystem = (
