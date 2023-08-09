@@ -9,17 +9,27 @@ const map = (value: number, x1: number, y1: number, x2: number, y2: number) =>
 
 export const createDrawingSystem = (
   scene: Scene,
-  graphics: Phaser.GameObjects.Graphics,
+  state_graphics: Phaser.GameObjects.Graphics,
   drawingConfig: any
 ) => {
   const config = drawingConfig;
   let genome: Genome;
+
+  let graphics = state_graphics;
 
   let textEntities: Phaser.GameObjects.Text[] = [];
 
   return defineSystem((population: Population) => {
     if (!population.bestPlayer) return;
     if (population.bestPlayer.brain === genome) return;
+
+    graphics.destroy();
+    for (let ent of textEntities) {
+      ent.destroy();
+    }
+
+    textEntities = [];
+    graphics = scene.add.graphics();
 
     genome = population.bestPlayer.brain;
 
@@ -35,8 +45,6 @@ export const createDrawingSystem = (
       let x = config.x + (i + 1) * layerDistance;
       for (let j = 0; j < genome.nodes.length; j++) {
         if (genome.nodes[j].layer == i) {
-          graphics.fillStyle(0x000000);
-          graphics.fillCircle(x, y, 20);
           nodesPositions.push({ x, y });
           nodesIdx.push(genome.nodes[j].id);
           y += 50;
@@ -63,7 +71,7 @@ export const createDrawingSystem = (
 
       graphics.lineStyle(
         map(Math.abs(genome.connections[i].weight), 0, 1, 0, 3),
-        0x000000
+        0x0f0f0f
       );
 
       let weight = genome.connections[i].weight.toFixed(2).toString();
@@ -86,6 +94,14 @@ export const createDrawingSystem = (
           textEntities[i].setText(weight);
         }
       }
+    }
+
+    for (let i = 0; i < nodesPositions.length; i++) {
+      graphics.fillStyle(0xffffff, 1);
+      graphics.lineStyle(1, 0x000000);
+      graphics.strokeCircle(nodesPositions[i].x, nodesPositions[i].y, 20);
+      graphics.fillCircle(nodesPositions[i].x, nodesPositions[i].y, 20);
+      y += 50;
     }
   });
 };

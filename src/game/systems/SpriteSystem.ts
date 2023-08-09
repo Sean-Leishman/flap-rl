@@ -33,10 +33,10 @@ export const createSpriteSystem = (group: Phaser.Physics.Arcade.Group) => {
       sprite.x = Position.x[id];
       sprite.y = Position.y[id];
       sprite.angle = Rotation.angle[id];
-      if (Player.dead[id]) {
-        sprite.visible = false;
-      } else {
+      if (Player.alive[id]) {
         sprite.visible = true;
+      } else {
+        sprite.visible = false;
       }
     }
     const exitEntities = spriteQueryExit(world);

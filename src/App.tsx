@@ -5,8 +5,8 @@ import ControlGame from "./ui/ControlGame";
 function App() {
   return (
     <>
-      <ControlGame />
       <Canvas />
+      <ControlGame />
     </>
   );
 }

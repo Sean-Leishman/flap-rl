@@ -13,6 +13,7 @@ import {
   LastPipe,
   Static,
   Vision,
+  Acceleration,
 } from "../constants";
 import {
   createSpriteSystem,
@@ -48,6 +49,9 @@ const TextureKeys = {
 };
 const YCORRANGE = [-150, 70];
 const OFFSET = 625;
+let pipe_speed = -2;
+let bird_gravity = 0.2;
+let bird_jump_speed = 4;
 
 const generateSpanPipeYCor = () => {
   const n = Math.floor(
@@ -88,8 +92,8 @@ const generatePipes = (world: World) => {
   Position.x[dpipe] = 500;
   Position.y[dpipe] = ypos.n;
 
-  Velocity.x[upipe] = -2;
-  Velocity.x[dpipe] = -2;
+  Velocity.x[upipe] = pipe_speed;
+  Velocity.x[dpipe] = pipe_speed;
 
   Pipe.type[upipe] = 1;
   Pipe.type[dpipe] = 0;
@@ -158,8 +162,10 @@ class Game extends Phaser.Scene {
     addComponent(this.world, Position, bird);
     addComponent(this.world, Rotation, bird);
     addComponent(this.world, Velocity, bird);
+    addComponent(this.world, Acceleration, bird);
     Position.x[bird] = 100;
     Position.y[bird] = Math.floor(Math.random() * 200 + 200);
+
     Sprite.texture[bird] = Textures.BirdUp;
     addComponent(this.world, Sprite, bird);
     addComponent(this.world, Player, bird);
@@ -197,7 +203,8 @@ class Game extends Phaser.Scene {
           player as Phaser.Types.Physics.Arcade.GameObjectWithBody
         ).getData("id");
         if (Player.alive[id]) {
-          Player.dead[id] = true;
+          Player.alive[id] = false;
+          store.dispatch({ type: "play/decrementAlive" });
         }
       }
     );
@@ -215,28 +222,51 @@ class Game extends Phaser.Scene {
     this.reinitialise();
     this.gfx = this.add.graphics();
 
-    this.birdSystem = createBirdSystem(this.kb);
+    this.birdSystem = createBirdSystem(this.kb, bird_gravity, bird_jump_speed);
     this.staticSpriteSystem = createStaticSpriteSystem(this.boundingGroup!);
     this.spriteSystem = createSpriteSystem(this.playerGroup!);
-    this.pipeSystem = createPipeSystem(generatePipes);
+    this.pipeSystem = createPipeSystem(generatePipes, pipe_speed);
     this.drawingSystem = createDrawingSystem(
       this,
       this.gfx,
       this.drawingConfig
     );
+
+    store.subscribe(() => {
+      if (pipe_speed != store.getState().pipe_speed) {
+        pipe_speed = store.getState().pipe_speed;
+      }
+      if (bird_gravity != store.getState().bird_gravity) {
+        bird_gravity = store.getState().bird_gravity;
+      }
+      if (bird_jump_speed != store.getState().bird_jump_speed) {
+        bird_jump_speed = store.getState().bird_jump_speed;
+      }
+    });
   }
 
   update() {
     if (!this.gameState?.pause) return;
     if (!this.world) return;
     this.spriteSystem?.(this.world);
-    this.birdSystem?.(this.world, this.gameState, this.population);
-    this.pipeSystem?.(this.world, this.gameState);
+    this.birdSystem?.(
+      this.world,
+      this.gameState,
+      this.population,
+      bird_gravity,
+      bird_jump_speed
+    );
+    this.pipeSystem?.(this.world, this.gameState, pipe_speed);
     this.drawingSystem?.(this.population);
     this.staticSpriteSystem?.(this.world);
     if (this.gameState && this.gameState.reset) {
       this.reinitialise();
       this.gameState?.resetGame(false);
+      store.dispatch({ type: "play/incrementGeneration" });
+      store.dispatch({
+        type: "play/resetStats",
+        payload: { num_alive: this.population?.population.length },
+      });
     }
   }
 }

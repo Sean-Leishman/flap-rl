@@ -1,6 +1,47 @@
-.play_btn {
+.play-btn {
   height: 50px;
   width: 75px;
   margin: 10px;
   padding: 10px;
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.generation-container {
+  display: flex;
+  margin-bottom: 5px;
+  font-size: 20px;
+  flex-direction: column;
+}
+
+.generation-text {
+}
+
+.slider-container {
+  padding: 10px;
+  width: 100%;
+}
+
+.slider-item {
+  width: 50%;
+}
+
+.slider-name {
+  margin-bottom: 10px;
+}
+
+.slider-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
