@@ -3,7 +3,7 @@ Implmentation of the Flappy Bird game but rather than relying on user control th
 
 Feel free to check it out [here](https://sean-leishman.github.io/flap-rl/)
 
-![Screenshot](https://github.com/Sean-Leishman/flap-rl/blob/master/github/home.png?raw=true 
+![Screenshot](https://github.com/Sean-Leishman/flap-rl/blob/master/github/home.png?raw=true)
 
 ## Instructions
 ```
